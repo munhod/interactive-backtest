@@ -70,7 +70,7 @@ def main():
         )
 
         # Set x-axis title
-        fig.update_xaxes(title_text="Dates", type = 'category')
+        fig.update_xaxes(title_text="Date", type = 'category')
 
         # Set y-axes titles
         fig.update_yaxes(title_text="<b>Price and Buy/Sell Signals</b> yaxis title", secondary_y=False)
@@ -116,11 +116,11 @@ def main():
     df['buy&hold'] = df['returns'].cumsum()
     df['pnl'] = df['returns'] * df['position']
     df['strategy'] = df['pnl'].cumsum()
-    df.index = df.index.date
+    df.index = pd.to_datetime(df.index, utc=True).date
     show_graph(df)
 
     sr = df['pnl'].mean() / df['pnl'].std() * np.sqrt(252)
-    streamlit.write('Total return:{}'.format(round(df['strategy'].iloc[-1]), 2))
+    streamlit.write('Total return:{}'.format(round(df['strategy'].iloc[-1]), 4))
     streamlit.write('Sharpe Ratio:{}'.format(round(sr, 2)))
     
 if __name__ == "__main__":
