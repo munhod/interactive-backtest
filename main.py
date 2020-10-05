@@ -116,7 +116,7 @@ def main():
     df['buy&hold'] = df['returns'].cumsum()
     df['pnl'] = df['returns'] * df['position']
     df['strategy'] = df['pnl'].cumsum()
-    df.index = df.index.dt.date
+    df.index = df.index.date
     show_graph(df)
 
     sr = df['pnl'].mean() / df['pnl'].std() * np.sqrt(252)
