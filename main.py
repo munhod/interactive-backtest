@@ -63,21 +63,21 @@ def main():
         )
 
         fig.add_trace(
-            go.Scatter(x=ticker_price_data.index, y=ticker_price_data['buy&hold'], name="Buy and Hold", fill='tozeroy'),
+            go.Scatter(x=ticker_price_data.index, y=ticker_price_data['buy&hold'], name="Buy and Hold"),
             secondary_y=True,
         )
 
         # Add figure title
         fig.update_layout(
-            title_text="Plot Chart and Backtest results", height=500, width=1000,
+            title_text="Price Chart and Backtest Results", height=500, width=1000,
         )
 
         # Set x-axis title
-        fig.update_xaxes(title_text="xaxis title", type = 'category')
+        fig.update_xaxes(title_text="Dates", type = 'category')
 
         # Set y-axes titles
-        fig.update_yaxes(title_text="<b>primary</b> yaxis title", secondary_y=False)
-        fig.update_yaxes(title_text="<b>secondary</b> yaxis title", secondary_y=True)
+        fig.update_yaxes(title_text="<b>Price and Buy/Sell Signals</b> yaxis title", secondary_y=False)
+        fig.update_yaxes(title_text="<b>Net Profit</b> yaxis title", secondary_y=True)
         
         streamlit.plotly_chart(fig)
     
@@ -99,10 +99,12 @@ def main():
         atr = wwma(tr, n)
         return atr
 
+    streamlit.title('Moving Averages Cross Strategy on EUR/USD')
+    
     df = load_data()
-
-    win_ind_1 = streamlit.sidebar.slider('Choose window for indicator 1', 1, 200, 20)
-    win_ind_2 = streamlit.sidebar.slider('Choose window for indicator 2',1, 200, 50)
+    
+    win_ind_1 = streamlit.sidebar.slider('Choose window for Indicator 1', 1, 200, 10)
+    win_ind_2 = streamlit.sidebar.slider('Choose window for Indicator 2',1, 200, 50)
 
     df['ind_1'] = df['askclose'].rolling(win_ind_1).mean()
     df['ind_2'] = df['askclose'].rolling(win_ind_2).mean()
@@ -115,10 +117,14 @@ def main():
     df['position'] = df['signal'].diff()
     df['returns'] = df['askclose'].pct_change()
     df['buy&hold'] = df['returns'].cumsum()
-    df['strategy'] = (df['returns'] * df['position']).cumsum()
+    df['pnl'] = df['returns'] * df['position']
+    df['strategy'] = df['pnl'].cumsum()
 
     show_graph(df)
 
+    sr = df['pnl'].mean() / df['pnl'].std() * np.sqrt(252)
+    streamlit.write('Total return:{}'.format(df['strategy'].iloc[-1]))
+    streamlit.write('Sharpe Ratio:{}'.format(round(sr, 2)))
     
 if __name__ == "__main__":
 
