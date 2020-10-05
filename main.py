@@ -88,8 +88,6 @@ def main():
     df['ind_1'] = df['askclose'].rolling(win_ind_1).mean()
     df['ind_2'] = df['askclose'].rolling(win_ind_2).mean()
 
-    df['atr'] = atr(df,20)
-
     df['signal'] = 0
     df['signal'] = np.where(df['ind_1'] > df['ind_2'], 1, -1)
 
