@@ -8,11 +8,12 @@ import streamlit
 
 
 
-#@streamlit.cache(allow_output_mutation=True)
+
 
 
 def main():
     
+    @streamlit.cache(allow_output_mutation=True)
     def load_data():
         return pd.read_pickle('df.pkl')
 
@@ -104,7 +105,7 @@ def main():
     df = load_data()
     
     win_ind_1 = streamlit.sidebar.slider('Choose window for Indicator 1', 1, 200, 10)
-    win_ind_2 = streamlit.sidebar.slider('Choose window for Indicator 2',1, 200, 50)
+    win_ind_2 = streamlit.sidebar.slider('Choose window for Indicator 2',1, 200, 20)
 
     df['ind_1'] = df['askclose'].rolling(win_ind_1).mean()
     df['ind_2'] = df['askclose'].rolling(win_ind_2).mean()
