@@ -7,10 +7,6 @@ import plotly.graph_objects as go
 import streamlit
 
 
-
-
-
-
 def main():
     
     @streamlit.cache(allow_output_mutation=True)
@@ -101,7 +97,7 @@ def main():
         return atr
 
     streamlit.header('Moving Averages Cross Strategy on EUR/USD')
-    streamlit.subheader('Showcasing how easy it is to analyse your data with Streamlit.)
+    streamlit.subheader('Showcasing how easy it is to analyse your financial data with Streamlit.')
     df = load_data()
     
     win_ind_1 = streamlit.sidebar.slider('Choose window for Indicator 1', 1, 200, 10)
@@ -120,7 +116,7 @@ def main():
     df['buy&hold'] = df['returns'].cumsum()
     df['pnl'] = df['returns'] * df['position']
     df['strategy'] = df['pnl'].cumsum()
-
+    df.index = df.index.dt.date
     show_graph(df)
 
     sr = df['pnl'].mean() / df['pnl'].std() * np.sqrt(252)
