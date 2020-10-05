@@ -66,42 +66,24 @@ def main():
 
         # Add figure title
         fig.update_layout(
-            title_text="Price Chart and Backtest Results", height=500, width=1000,
+            title_text="Price Chart and Backtest Results", height=600, width=1000,
         )
 
         # Set x-axis title
-        fig.update_xaxes(title_text="Date", type = 'category')
+        fig.update_xaxes(title_text="Date") #, type = 'category')
 
         # Set y-axes titles
-        fig.update_yaxes(title_text="<b>Price and Buy/Sell Signals</b> yaxis title", secondary_y=False)
-        fig.update_yaxes(title_text="<b>Net Profit</b> yaxis title", secondary_y=True)
+        fig.update_yaxes(title_text="<b>Price and Buy/Sell Signals</b>", secondary_y=False)
+        fig.update_yaxes(title_text="<b>Net Profit</b>", secondary_y=True)
         
         streamlit.plotly_chart(fig)
-    
-    def wwma(values, n):
-        """
-        J. Welles Wilder's EMA 
-        """
-        return values.ewm(alpha=1/n, adjust=False).mean()
-
-    def atr(df, n=14):
-        data = df.copy()
-        high = data['askhigh']
-        low = data['asklow']
-        close = data['askclose']
-        data['tr0'] = abs(high - low)
-        data['tr1'] = abs(high - close.shift())
-        data['tr2'] = abs(low - close.shift())
-        tr = data[['tr0', 'tr1', 'tr2']].max(axis=1)
-        atr = wwma(tr, n)
-        return atr
 
     streamlit.header('Moving Averages Cross Strategy on EUR/USD')
-    streamlit.subheader('Showcasing how easy it is to analyse your financial data with Streamlit.')
+    streamlit.subheader('Showcasing how easy it is to analyse financial data with Streamlit.')
     df = load_data()
     
-    win_ind_1 = streamlit.sidebar.slider('Choose window for Indicator 1', 1, 200, 10)
-    win_ind_2 = streamlit.sidebar.slider('Choose window for Indicator 2',1, 200, 20)
+    win_ind_1 = streamlit.sidebar.slider('Choose period for Moving Average No. 1', 1, 200, 10)
+    win_ind_2 = streamlit.sidebar.slider('Choose period for Moving Average No. 2',1, 200, 20)
 
     df['ind_1'] = df['askclose'].rolling(win_ind_1).mean()
     df['ind_2'] = df['askclose'].rolling(win_ind_2).mean()
