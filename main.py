@@ -120,7 +120,8 @@ def main():
     show_graph(df)
 
     sr = df['pnl'].mean() / df['pnl'].std() * np.sqrt(252)
-    streamlit.write('Total return:{}'.format(round(df['strategy'].iloc[-1]), 4))
+    
+    streamlit.write('Total return:{}'.format(round(df['strategy'].iloc[-1], 2)))
     streamlit.write('Sharpe Ratio:{}'.format(round(sr, 2)))
     
 if __name__ == "__main__":
