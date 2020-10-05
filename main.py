@@ -100,8 +100,8 @@ def main():
         atr = wwma(tr, n)
         return atr
 
-    streamlit.title('Moving Averages Cross Strategy on EUR/USD')
-    
+    streamlit.header('Moving Averages Cross Strategy on EUR/USD')
+    streamlit.subheader('Showcasing how easy it is to analyse your data with Streamlit.)
     df = load_data()
     
     win_ind_1 = streamlit.sidebar.slider('Choose window for Indicator 1', 1, 200, 10)
@@ -124,11 +124,11 @@ def main():
     show_graph(df)
 
     sr = df['pnl'].mean() / df['pnl'].std() * np.sqrt(252)
-    streamlit.write('Total return:{}'.format(df['strategy'].iloc[-1]))
+    streamlit.write('Total return:{}'.format(round(df['strategy'].iloc[-1]), 2))
     streamlit.write('Sharpe Ratio:{}'.format(round(sr, 2)))
     
 if __name__ == "__main__":
-
+                        
     main()
 
      
